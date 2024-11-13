@@ -64,16 +64,55 @@ public class DLL<T> {
         else
             current = current.next;
     }
-    public void removeBetween(T e1, T e2) {
-        throw new UnsupportedOperationException("Not supported yet.");
-        // throw new UnsupportedOperationException("Not supported yet.");
-        // Write the method removeBetween, member of the class DoubleLinkedList. The method
-        // takes two elements e1 and e2, and removes all the elements between the two elements
-        // (e1 and e2 not included). If e1 or e2 or both doesn’t exist, no element will be removed. You can assume the elements to be unique, e1 comes before e2, and that
-        // e1 ̸= e2. Current is moved to head if the removal is successful. Do not call any
-        // methods and do not use any auxiliary data structures. The method signature
-        // is: public void removeBetween(T e1, T e2).
-        // Example 3.1. Given the list: A ↔ B ↔ C ↔ D ↔ E ↔ F, removeBetween(’B’,
-        // ’E’) results in: A ↔ B ↔ E ↔ F.
+   public void removeBetween(T e1, T e2) {
+    if (empty()) {
+        return; // If the list is empty, do nothing.
     }
-}
+
+    DLLNode<T> node1 = null; // Node containing e1
+    DLLNode<T> node2 = null; // Node containing e2
+
+    // Search for node1 (containing e1) and node2 (containing e2)
+    DLLNode<T> temp = head;
+    while (temp != null) {
+        if (temp.data.equals(e1)) {
+            node1 = temp;
+        } else if (temp.data.equals(e2)) {
+            node2 = temp;
+        }
+
+        if (node1 != null && node2 != null) {
+            break; // Found both e1 and e2
+        }
+
+        temp = temp.next;
+    }
+
+    // If either e1 or e2 is not found, or if node1 comes after node2, do nothing
+    if (node1 == null || node2 == null || node1.next == node2) {
+        return;
+    }
+
+    // Remove nodes between node1 and node2
+    DLLNode<T> current = node1.next;
+    while (current != node2) {
+        DLLNode<T> nextNode = current.next; // Save the next node
+
+        // Unlink the current node
+        if (current.previous != null) {
+            current.previous.next = current.next;
+        }
+        if (current.next != null) {
+            current.next.previous = current.previous;
+        }
+
+        current = nextNode; // Move to the next node
+    }
+
+    // Link node1 to node2 directly
+    node1.next = node2;
+    node2.previous = node1;
+
+    // Move current pointer to head after successful removal
+    current = head;
+}}
